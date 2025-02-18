@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-gradient">📜 გააგრძელე ვეფხისტყაოსანი</h2>
+        <p class="text-muted fs-5">✍️ შეიყვანეთ თქვენი ჩანაწერი და გააგრძელეთ ქართული ლიტერატურის შედევრი.</p>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+                {{ form.message(class="form-control form-control-lg rounded-3 shadow-sm", placeholder=form.message.label.text, disabled=not current_user.is_authenticated) }}
+            </div>
+            
+            <div>
+                {% if current_user.is_authenticated %}
+                    <button class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm">📨 გაგზავნა</button>
+                {% else %}
+                    <button class="btn btn-secondary btn-lg w-100 rounded-pill shadow-sm" disabled>🔒 გთხოვთ გაიარეთ ავტორიზაცია</button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #f8f9fa;
+    }
+    .text-gradient {
+        background: linear-gradient(90deg, #007bff, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    p, h2, label, ::placeholder, .btn {
+        font-family: "BPG Classic Medium", sans-serif;
+    }
+    .btn-primary {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border: none;
+        transition: 0.3s;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #0056b3, #007bff);
+    }
+    .form-control {
+        font-weight: bold;
+        padding: 12px 15px;
+        font-size: 18px;
+    }
+</style>
+
+{% endblock %}
