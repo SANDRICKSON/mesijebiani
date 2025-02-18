@@ -1,6 +1,7 @@
 from extensions import db, login_manager
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
 class BaseModel:
     def create(self):
@@ -15,18 +16,17 @@ class BaseModel:
     def save():
         db.session.commit()
 
-class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
+class User(db.Model, BaseModel, UserMixin):  
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)  
-    email = db.Column(db.String, nullable=False, unique=True)  # დაამატე email ველი
+    email = db.Column(db.String, nullable=False, unique=True)  
     _password = db.Column(db.String, nullable=False)  
     country = db.Column(db.String)
     gender = db.Column(db.String)
     birthday = db.Column(db.Date)
     is_verified = db.Column(db.Boolean, default=False)
 
-
-    @login_manager.user_loader  # Moved outside the class
+    @login_manager.user_loader  
     def load_user(user_id):
        return User.query.get(user_id)
 
@@ -42,9 +42,9 @@ class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
     
     def check_password(self, password):
         return check_password_hash(self._password, password)
-    
 
 
-class Message(db.Model, BaseModel):
-     id = db.Column(db.Integer, primary_key=True)
-     message = db.Column(db.String, nullable=False, unique=True)  
+class Message(db.Model, BaseModel):  # ✅ `db.model` -> `db.Model`
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(500), nullable=False)  # ✅ `unique=True` ამოვიღეთ
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # ✅ თარიღი დავამატეთ
