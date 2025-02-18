@@ -5,7 +5,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from extensions import app, mail
-from models import User, Message
+from models import User
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm
 
 # 📌 Email ვერიფიკაციის ტოკენის გენერაცია
@@ -161,11 +161,7 @@ def about():
 def contact():
     form = MessageForm()
     if form.validate_on_submit():
-        message=Message(
-            message=form.message.data
-        )
-        message.create()
-        
+        print(form.message.data)
     return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
 
 @app.route("/author")
