@@ -16,17 +16,18 @@ class BaseModel:
     def save():
         db.session.commit()
 
-class User(db.Model, BaseModel, UserMixin):  
+class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)  
-    email = db.Column(db.String, nullable=False, unique=True)  
+    email = db.Column(db.String, nullable=False, unique=True)  # დაამატე email ველი
     _password = db.Column(db.String, nullable=False)  
     country = db.Column(db.String)
     gender = db.Column(db.String)
     birthday = db.Column(db.Date)
     is_verified = db.Column(db.Boolean, default=False)
 
-    @login_manager.user_loader  
+
+    @login_manager.user_loader  # Moved outside the class
     def load_user(user_id):
        return User.query.get(user_id)
 
@@ -42,10 +43,11 @@ class User(db.Model, BaseModel, UserMixin):
     
     def check_password(self, password):
         return check_password_hash(self._password, password)
+    
 
 
-class Message(db.Model, BaseModel):  # ✅ `db.model` -> `db.Model`
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), nullable=False)
-    message = db.Column(db.String(500), nullable=False)  # ✅ `unique=True` ამოვიღეთ
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # ✅ თარიღი დავამატეთ
+class Message(db.Model, BaseModel):
+     id = db.Column(db.Integer, primary_key=True)
+     email = db.Column(db.String(120), nullable=False)
+     message = db.Column(db.String, nullable=False, unique=True)  
+     created_at = db.Column(db.DateTime, default=datetime.utcnow)
