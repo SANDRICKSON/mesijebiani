@@ -158,11 +158,21 @@ def about():
     return render_template("about.html", title="პროექტის შესახებ - ვეფხისტყაოსანი")
 
 @app.route("/contact", methods=["GET", "POST"])
+@login_required  # მხოლოდ ავტორიზებულ მომხმარებლებს შეუძლიათ შეტყობინების გაგზავნა
 def contact():
     form = MessageForm()
     if form.validate_on_submit():
-        print(form.message.data)
+        message = Message(
+            email=current_user.email,  # მომხმარებლის ელ-ფოსტა ავტომატურად
+            message=form.message.data
+        )
+        db.session.add(message)
+        db.session.commit()
+        flash("თქვენი შეტყობინება წარმატებით გაიგზავნა!", "success")
+        return redirect(url_for("contact"))
+
     return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
+
 
 @app.route("/author")
 def author():
