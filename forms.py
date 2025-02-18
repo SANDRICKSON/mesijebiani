@@ -22,8 +22,9 @@ class RegisterForm(FlaskForm):
 
 
 class MessageForm(FlaskForm):
-    message = StringField("დაწერეთ მესიჯი")
+    message = TextAreaField("დაწერეთ მესიჯი", validators=[DataRequired()])
     submit = SubmitField("გაგზავნეთ მესიჯი")
+
 
 class LoginForm(FlaskForm):
        username = StringField("შეიყვანეთ სახელი", validators=[DataRequired(), Length(min=8, max=64)])
