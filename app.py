@@ -5,7 +5,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from extensions import app, mail
-from models import User, Message
+from models import User
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm
 
 # 📌 Email ვერიფიკაციის ტოკენის გენერაცია
@@ -157,7 +157,12 @@ def update():
 def about():
     return render_template("about.html", title="პროექტის შესახებ - ვეფხისტყაოსანი")
 
-
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    form = MessageForm()
+    if form.validate_on_submit():
+        print(form.message.data)
+    return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
 
 @app.route("/author")
 def author():
@@ -194,6 +199,7 @@ def logout():
 def profile():
     return render_template("profile.html", title="პროფილი - ვეფხისტყაოსანი")
 
+# 📌 რეგისტრაციის როუტი - ემაილის ვერიფიკაციის გაგზავნით
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm()
@@ -215,17 +221,6 @@ def register():
     print(form.errors) 
     return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
-
-@app.route("/contact", methods=["GET", "POST"])
-def contact():
-    form = MessageForm()
-    if form.validate_on_submit():
-        message=Message(
-            message=form.message.data
-        )
-        message.create()
-        
-    return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
 
 @app.route("/privacy")
 def privacy():
