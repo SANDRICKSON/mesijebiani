@@ -194,7 +194,6 @@ def logout():
 def profile():
     return render_template("profile.html", title="პროფილი - ვეფხისტყაოსანი")
 
-# 📌 რეგისტრაციის როუტი - ემაილის ვერიფიკაციის გაგზავნით
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm()
@@ -215,6 +214,7 @@ def register():
     
     print(form.errors) 
     return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
+
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
