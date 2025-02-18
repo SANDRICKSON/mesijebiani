@@ -28,9 +28,10 @@ class MessageForm(FlaskForm):
 
 class LoginForm(FlaskForm):
        username = StringField("შეიყვანეთ სახელი", validators=[DataRequired(), Length(min=8, max=64)])
-
+    
        password = PasswordField("შეიყვანეთ პაროლი", validators=[DataRequired(), Length(min=8, max=64)])
        submit = SubmitField("ავტორიზაცია")
+       remember_me = BooleanField('დამახსოვრება')
 
 
 class UpdateForm(FlaskForm):
