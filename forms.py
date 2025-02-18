@@ -31,7 +31,7 @@ class LoginForm(FlaskForm):
     
        password = PasswordField("შეიყვანეთ პაროლი", validators=[DataRequired(), Length(min=8, max=64)])
        submit = SubmitField("ავტორიზაცია")
-       remember_me = BooleanField('დამახსოვრება')
+       remember_me = BooleanField('დამიმახსოვრე')
 
 
 class UpdateForm(FlaskForm):
