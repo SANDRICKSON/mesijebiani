@@ -5,7 +5,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from extensions import app, mail
-from models import User
+from models import User, Message
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm
 
 # 📌 Email ვერიფიკაციის ტოკენის გენერაცია
