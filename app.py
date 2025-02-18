@@ -161,7 +161,11 @@ def about():
 def contact():
     form = MessageForm()
     if form.validate_on_submit():
-        print(form.message.data)
+        message=Message(
+            message=form.message.data
+        )
+        message.create()
+        
     return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
 
 @app.route("/author")
