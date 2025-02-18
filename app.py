@@ -180,6 +180,7 @@ def login():
                 flash("თქვენს ელ-ფოსტაზე ვერიფიკაციის ბმული გაგზავნილია!", "warning")
                 return redirect(url_for('login'))
             login_user(user)
+            login_user(user, remember=form.remember_me.data)
             return redirect(url_for("index")) 
     return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
 
