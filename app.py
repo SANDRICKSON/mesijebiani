@@ -172,6 +172,15 @@ def author():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+     ip = request.remote_addr
+    
+    # თუ 5 მცდელობაა ბოლო 15 წუთში, დაბლოკე
+    now = datetime.now()
+    if ip in login_attempts:
+        attempts, last_attempt = login_attempts[ip]
+        if attempts >= 5 and now - last_attempt < timedelta(minutes=15):
+            flash("ბევრი მცდელობა, სცადე მოგვიანებით!", "danger")
+            return redirect(url_for("login"))
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
