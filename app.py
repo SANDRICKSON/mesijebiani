@@ -169,19 +169,27 @@ def author():
     return render_template("author.html", title="ავტორის შესახებ - ვეფხისტყაოსანი")
 
 # 📌 ავტორიზაციის როუტი - მხოლოდ ვერიფიცირებული მომხმარებლებისთვის
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
             if not user.is_verified:
-                send_verification_email(user.email)  # ხელახალი გაგზავნა
-                flash("თქვენს ელ-ფოსტაზე ვერიფიკაციის ბმული გაგზავნილია!", "warning")
+                send_verification_email(user.email)
+                flash("გთხოვთ, ელ-ფოსტის ვერიფიკაცია გაიაროთ!", "warning")
                 return redirect(url_for('login'))
-            login_user(user)
-            login_user(user, remember=form.remember_me.data)
-            return redirect(url_for("index")) 
+            
+            # 📌 JWT ტოკენების შექმნა
+            access_token = create_access_token(identity=user.id)
+            refresh_token = create_refresh_token(identity=user.id)
+
+            response = make_response(redirect(url_for("profile")))  # წარმატებული ლოგინი
+            set_access_cookies(response, access_token)
+            set_refresh_cookies(response, refresh_token)
+
+            return response
+
     return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
 
 
