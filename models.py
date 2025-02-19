@@ -2,6 +2,7 @@ from extensions import db, login_manager
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
+import pyotp
 
 class BaseModel:
     def create(self):
@@ -25,6 +26,7 @@ class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
     gender = db.Column(db.String)
     birthday = db.Column(db.Date)
     is_verified = db.Column(db.Boolean, default=False)
+    otp_secret = db.Column(db.String(16), default=pyotp.random_base32())
 
 
     @login_manager.user_loader  # Moved outside the class
