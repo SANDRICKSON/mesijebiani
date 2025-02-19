@@ -173,7 +173,7 @@ def author():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-     ip = request.remote_addr
+    ip = request.remote_addr  # ✅ სწორი დაშორება
     
     # თუ 5 მცდელობაა ბოლო 15 წუთში, დაბლოკე
     now = datetime.now()
@@ -182,16 +182,20 @@ def login():
         if attempts >= 5 and now - last_attempt < timedelta(minutes=15):
             flash("ბევრი მცდელობა, სცადე მოგვიანებით!", "danger")
             return redirect(url_for("login"))
+    
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
-            if not user.is_verified:
-                send_verification_email(user.email)  # ხელახალი გაგზავნა
-                flash("თქვენს ელ-ფოსტაზე ვერიფიკაციის ბმული გაგზავნილია!", "warning")
-                return redirect(url_for('login'))
+            login_attempts[ip] = (0, now)  # ნულოვანი მცდელობა
             login_user(user)
-            return redirect(url_for("index")) 
-    return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
+            return redirect(url_for("index"))
+        else:
+            attempts = login_attempts.get(ip, (0, now))[0] + 1
+            login_attempts[ip] = (attempts, now)
+            flash("მომხმარებლის სახელი ან პაროლი არასწორია!", "danger")
+    
+    return render_template("login.html", form=form)
+
 
 
 @app.route("/poem")
